@@ -1,34 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { v4 as uuidV4 } from "uuid";
+import React, { useCallback } from "react";
 import AddTodo from "../add-todo";
 import TodoList from "../todo-list";
+import todoReducer, {
+  ADD_TODO,
+  COMPLETE_TODO,
+  DELETE_TODO
+} from "../../utils/todo-reducer";
+import usePersistentReducer from "../../hooks/use-persistent-reducer";
 
 const Todos = () => {
-  const [todos, setTodos] = useState([]);
+  const [state, dispatch] = usePersistentReducer(todoReducer, "todos");
+  const { todos = [] } = state;
 
-  useEffect(() => {
-    setTodos(JSON.parse(localStorage.getItem("todos") || "[]"));
-  }, []);
+  const addTodoHandler = useCallback(
+    text => {
+      dispatch({ type: ADD_TODO, payload: text });
+    },
+    [dispatch]
+  );
 
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+  const onCompletedHandler = useCallback(
+    todo => {
+      dispatch({ type: COMPLETE_TODO, payload: todo });
+    },
+    [dispatch]
+  );
 
-  const addTodoHandler = text => {
-    setTodos([...todos, { id: uuidV4(), text, completed: false }]);
-  };
-
-  const onCompletedHandler = ({ id, completed }) => {
-    setTodos(
-      todos.map(todo =>
-        todo.id === id ? { ...todo, completed: !completed } : todo
-      )
-    );
-  };
-
-  const onDeleteHandler = ({ id }) => {
-    setTodos(todos.filter(todo => todo.id !== id));
-  };
+  const onDeleteHandler = useCallback(
+    todo => {
+      dispatch({ type: DELETE_TODO, payload: todo });
+    },
+    [dispatch]
+  );
 
   return (
     <>
