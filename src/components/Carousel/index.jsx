@@ -1,81 +1,51 @@
-import React, { useState, useEffect } from "react";
-import usePersistentState from "../../hooks/use-persistent-state";
-
-const Carousel = ({ autoplay = 0 }) => {
-  const [activeSlide, setActiveSlide] = usePersistentState(0, "activeSlide");
-  const [images, setImages] = useState([]);
-
-  useEffect(() => {
-    fetch("https://picsum.photos/v2/list?limit=10")
-      .then(response => response.json())
-      .then(data => {
-        setImages(data);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (autoplay) {
-      const interval = setInterval(() => {
-        setActiveSlide(activeState => {
-          return calculateNextIndex(activeState, images.length, autoplay);
-        });
-      }, 1500);
-
-      return () => {
-        clearInterval(interval);
-      };
-    }
-  }, [images, autoplay]);
-
-  const calculateNextIndex = (currentIndex, slidesLength, option = 1) => {
-    if (option === -1) {
-      return currentIndex <= 0 ? slidesLength - 1 : currentIndex - 1;
-    } else {
-      return currentIndex >= images.length - 1 ? 0 : currentIndex + 1;
-    }
-  };
-
-  const moveToPreviousSlide = () => {
-    const previousSlide = calculateNextIndex(activeSlide, images.length, -1);
-    setActiveSlide(previousSlide);
-  };
-
-  const moveToNextSlide = () => {
-    const nextSlide = calculateNextIndex(activeSlide, images.length, 1);
-    setActiveSlide(nextSlide);
-  };
-
-  return images.length ? (
+import React from "react";
+/*
+    images url - https://picsum.photos/v2/list?limit=10
+    https://picsum.photos/id/${id}/1440/600
+    add previous/next/autoplay
+    persist previous/next/autoplay using custom hook
+*/
+const Carousel = () => {
+  return (
     <div class="carousel slide">
-      <button className="carousel-control-prev" onClick={moveToPreviousSlide}>
+      <button className="carousel-control-prev">
         <span className="carousel-control-prev-icon" aria-hidden="true"></span>
         <span className="sr-only">Previous</span>
       </button>
       <div class="carousel-inner">
-        {images.map(({ id, author, download_url }, index) => {
-          const activeClass = activeSlide === index ? "active" : "";
-          return (
-            <div key={id} className={`carousel-item ${activeClass}`}>
-              <img
-                src={`https://picsum.photos/id/${id}/1440/600`}
-                className={`d-block w-100 ${activeClass}`}
-                alt={author}
-              />
-            </div>
-          );
-        })}
+        <div className="carousel-item active">
+          <img
+            src="https://picsum.photos/id/200/1440/600"
+            className={`d-block w-100 active`}
+            alt="Lorem Ipsum"
+          />
+        </div>
+        <div className="carousel-item">
+          <img
+            src="https://picsum.photos/id/200/1440/600"
+            className={`d-block w-100`}
+            alt="Lorem Ipsum"
+          />
+        </div>
+        <div className="carousel-item">
+          <img
+            src="https://picsum.photos/id/200/1440/600"
+            className={`d-block w-100`}
+            alt="Lorem Ipsum"
+          />
+        </div>
       </div>
       <ol class="carousel-indicators">
-        {images.map(({ id }, index) => (
-          <li key={id} className={activeSlide === index ? "active" : ""}></li>
-        ))}
+        <li className="active"></li>
+        <li className=""></li>
+        <li className=""></li>
       </ol>
-      <button className="carousel-control-next" onClick={moveToNextSlide}>
+      <button className="carousel-control-next">
         <span className="carousel-control-next-icon" aria-hidden="true"></span>
         <span className="sr-only">Next</span>
       </button>
     </div>
-  ) : null;
+  );
 };
 
 export default Carousel;

@@ -1,40 +1,28 @@
 import React from "react";
 import Carousel from "./components/Carousel";
-import usePersistentState from "./hooks/use-persistent-state";
 
+/*
+  persist autoplay here
+ */
 function App() {
-  const [autoplay, setAutoplay] = usePersistentState(0, "autoplay");
-
   return (
     <div className="container">
       <h1>React Hooks Training</h1>
       <main>
-        <Carousel autoplay={autoplay} />
-        <div className="d-flex justify-content-center m-2">
+        <Carousel />
+        {/* <div className="d-flex justify-content-center m-2">
           <div class="btn-group" role="group" aria-label="Basic example">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              onClick={() => setAutoplay(-1)}
-            >
-              Previous
+            <button type="button" class="btn btn-secondary">
+              Forward
             </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              onClick={() => setAutoplay(0)}
-            >
+            <button type="button" class="btn btn-secondary">
               Stop
             </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              onClick={() => setAutoplay(1)}
-            >
-              Next
+            <button type="button" class="btn btn-secondary">
+              Reverse
             </button>
           </div>
-        </div>
+        </div> */}
       </main>
     </div>
   );
