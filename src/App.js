@@ -1,24 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Carousel from "./components/Carousel";
+import usePersistentState from "./hooks/use-persistent-state";
 
 function App() {
+  const [autoplay, setAutoplay] = usePersistentState(0, "autoplay");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <h1>React Hooks Training</h1>
+      <main>
+        <Carousel autoplay={autoplay} />
+        <div className="d-flex justify-content-center m-2">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onClick={() => setAutoplay(-1)}
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onClick={() => setAutoplay(0)}
+            >
+              Stop
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onClick={() => setAutoplay(1)}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

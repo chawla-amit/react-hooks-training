@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.container {
+  display: flex;
+  flex: 1;
+  max-width: 1440px;
+  justify-content: center;
+  flex-direction: column;
+}
+
+button.carousel-control-prev,
+button.carousel-control-next {
+  color: transparent;
+  background: transparent;
+  border: transparent;
+}
