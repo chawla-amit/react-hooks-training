@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import usePersistentState from "../../hooks/use-persistent-state";
 
-const Carousel = ({ autoplay = 0 }) => {
+const Carousel = ({ autoplay = 0, images = [] }) => {
   const [activeSlide, setActiveSlide] = usePersistentState(0, "activeSlide");
-  const [images, setImages] = useState([]);
 
-  useEffect(() => {
-    fetch("https://picsum.photos/v2/list?limit=10")
-      .then(response => response.json())
-      .then(data => {
-        setImages(data);
-      });
-  }, []);
+  const calculateNextIndex = (currentIndex, slidesLength, option = 1) => {
+    if (option === -1) {
+      return currentIndex <= 0 ? slidesLength - 1 : currentIndex - 1;
+    } else {
+      return currentIndex >= images.length - 1 ? 0 : currentIndex + 1;
+    }
+  };
 
   useEffect(() => {
     if (autoplay) {
@@ -26,14 +25,6 @@ const Carousel = ({ autoplay = 0 }) => {
       };
     }
   }, [images, autoplay]);
-
-  const calculateNextIndex = (currentIndex, slidesLength, option = 1) => {
-    if (option === -1) {
-      return currentIndex <= 0 ? slidesLength - 1 : currentIndex - 1;
-    } else {
-      return currentIndex >= images.length - 1 ? 0 : currentIndex + 1;
-    }
-  };
 
   const moveToPreviousSlide = () => {
     const previousSlide = calculateNextIndex(activeSlide, images.length, -1);
