@@ -1,28 +1,124 @@
 import React from "react";
 import Carousel from "./components/Carousel";
-
+import usePersistentState from "./hooks/use-persistent-state";
 /*
   persist autoplay here
  */
 function App() {
+  const images = [
+    {
+      id: "0",
+      author: "Alejandro Escamilla",
+      width: 5616,
+      height: 3744,
+      url: "https://unsplash.com/photos/yC-Yzbqy7PY",
+      download_url: "https://picsum.photos/id/0/5616/3744"
+    },
+    {
+      id: "1",
+      author: "Alejandro Escamilla",
+      width: 5616,
+      height: 3744,
+      url: "https://unsplash.com/photos/LNRyGwIJr5c",
+      download_url: "https://picsum.photos/id/1/5616/3744"
+    },
+    {
+      id: "10",
+      author: "Paul Jarvis",
+      width: 2500,
+      height: 1667,
+      url: "https://unsplash.com/photos/6J--NXulQCs",
+      download_url: "https://picsum.photos/id/10/2500/1667"
+    },
+    {
+      id: "100",
+      author: "Tina Rataj",
+      width: 2500,
+      height: 1656,
+      url: "https://unsplash.com/photos/pwaaqfoMibI",
+      download_url: "https://picsum.photos/id/100/2500/1656"
+    },
+    {
+      id: "1000",
+      author: "Lukas Budimaier",
+      width: 5626,
+      height: 3635,
+      url: "https://unsplash.com/photos/6cY-FvMlmkQ",
+      download_url: "https://picsum.photos/id/1000/5626/3635"
+    },
+    {
+      id: "1001",
+      author: "Danielle MacInnes",
+      width: 5616,
+      height: 3744,
+      url: "https://unsplash.com/photos/1DkWWN1dr-s",
+      download_url: "https://picsum.photos/id/1001/5616/3744"
+    },
+    {
+      id: "1002",
+      author: "NASA",
+      width: 4312,
+      height: 2868,
+      url: "https://unsplash.com/photos/6-jTZysYY_U",
+      download_url: "https://picsum.photos/id/1002/4312/2868"
+    },
+    {
+      id: "1003",
+      author: "E+N Photographies",
+      width: 1181,
+      height: 1772,
+      url: "https://unsplash.com/photos/GYumuBnTqKc",
+      download_url: "https://picsum.photos/id/1003/1181/1772"
+    },
+    {
+      id: "1004",
+      author: "Greg Rakozy",
+      width: 5616,
+      height: 3744,
+      url: "https://unsplash.com/photos/SSxIGsySh8o",
+      download_url: "https://picsum.photos/id/1004/5616/3744"
+    },
+    {
+      id: "1005",
+      author: "Matthew Wiebe",
+      width: 5760,
+      height: 3840,
+      url: "https://unsplash.com/photos/tBtuxtLvAZs",
+      download_url: "https://picsum.photos/id/1005/5760/3840"
+    }
+  ];
+  const [autoplay, setAutoplay] = usePersistentState(0, "autoplay");
+
   return (
     <div className="container">
       <h1>React Hooks Training</h1>
       <main>
-        <Carousel />
-        {/* <div className="d-flex justify-content-center m-2">
+        <Carousel images={images} autoplay={autoplay} />
+        <div className="d-flex justify-content-center m-2">
           <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-secondary">
-              Forward
-            </button>
-            <button type="button" class="btn btn-secondary">
-              Stop
-            </button>
-            <button type="button" class="btn btn-secondary">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onClick={() => setAutoplay(-1)}
+            >
               Reverse
             </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onClick={() => setAutoplay(0)}
+            >
+              Stop
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onClick={() => setAutoplay(1)}
+            >
+              Forward
+            </button>
           </div>
-        </div> */}
+        </div>
       </main>
     </div>
   );
