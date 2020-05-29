@@ -1,63 +1,78 @@
-import React, { PureComponent } from "react";
+import React, { useReducer, useCallback } from "react";
 import { v4 as uuidV4 } from "uuid";
 import AddTodo from "../add-todo";
 import TodoList from "../todo-list";
 
-class Todos extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      todos: []
-    };
+const ADD_TODO = "ADD_TODO";
+const ON_COMPLETED = "ON_COMPLETED";
+const ON_DELETE = "ON_DELETE";
+
+const intialState = {
+  todos: []
+};
+
+const todoReducer = (state, { type, payload }) => {
+  const { todos } = state;
+  switch (type) {
+    case ADD_TODO:
+      return {
+        ...state,
+        todos: [...todos, { id: uuidV4(), text: payload, completed: false }]
+      };
+    case ON_COMPLETED:
+      return {
+        ...state,
+        todos: todos.map(todo =>
+          todo.id === payload.id
+            ? { ...todo, completed: !payload.completed }
+            : todo
+        )
+      };
+    case ON_DELETE:
+      return {
+        ...state,
+        todos: todos.filter(todo => todo.id !== payload.id)
+      };
+    default:
+      return state;
   }
+};
 
-  componentDidMount() {
-    this.setState({ todos: JSON.parse(localStorage.getItem("todos")) || [] });
-  }
-  componentDidUpdate(prevProps, prevState) {
-    const { todos: preTodos } = prevState;
-    const { todos } = this.state;
-    if (todos !== preTodos) {
-      localStorage.setItem("todos", JSON.stringify(todos));
-    }
-  }
+const Todos = () => {
+  const [state, dispatch] = useReducer(todoReducer, intialState);
+  const { todos } = state;
 
-  addTodoHandler = text => {
-    const { todos } = this.state;
-    this.setState({
-      todos: [...todos, { id: uuidV4(), text, completed: false }]
-    });
-  };
+  const addTodoHandler = useCallback(
+    text => {
+      dispatch({ type: ADD_TODO, payload: text });
+    },
+    [dispatch]
+  );
 
-  onCompletedHandler = ({ id, completed }) => {
-    const { todos } = this.state;
-    this.setState({
-      todos: todos.map(todo =>
-        todo.id === id ? { ...todo, completed: !completed } : todo
-      )
-    });
-  };
+  const onCompletedHandler = useCallback(
+    ({ id, completed }) => {
+      dispatch({ type: ON_COMPLETED, payload: { id, completed } });
+    },
+    [dispatch]
+  );
 
-  onDeleteHandler = ({ id }) => {
-    const { todos } = this.state;
-    this.setState({
-      todos: todos.filter(todo => todo.id !== id)
-    });
-  };
+  const onDeleteHandler = useCallback(
+    ({ id }) => {
+      dispatch({ type: ON_DELETE, payload: { id } });
+    },
+    [dispatch]
+  );
 
-  render() {
-    const { todos } = this.state;
-    return (
-      <>
-        <AddTodo addTodoHandler={this.addTodoHandler} />
-        <TodoList
-          todos={todos}
-          onCompletedHandler={this.onCompletedHandler}
-          onDeleteHandler={this.onDeleteHandler}
-        />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <AddTodo addTodoHandler={addTodoHandler} />
+      <TodoList
+        todos={todos}
+        onCompletedHandler={onCompletedHandler}
+        onDeleteHandler={onDeleteHandler}
+      />
+    </>
+  );
+};
 
 export default Todos;
